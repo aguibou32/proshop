@@ -10,14 +10,13 @@ const initialState = localStorage.getItem('cart') ? JSON.parse(localStorage.getI
 };
 
 
-
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
     addToCart: (state, action) => {
       const item = action.payload; // Extract the item from the action payload
-      console.log(item);
+      // console.log(item);
       // Check if the item already exists in the cart
       const existsItem = state.cartItems.find(x => x._id === item._id);
 
@@ -28,9 +27,7 @@ const cartSlice = createSlice({
         // If the item doesn't exist, add it to the cart
         state.cartItems = [...state.cartItems, item];
       }
-
       return updateCart(state);
-
     },
     removeFromCart: (state, action) => {
       const item = action.payload;

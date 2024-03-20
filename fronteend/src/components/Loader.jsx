@@ -4,16 +4,19 @@ import React from 'react'
 
 function Loader() {
   return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
     <Spinner
       animation="border"
       role="status"
       style={{
         width: "100px",
         height: "100px",
-        margin: "auto",
-        display: "block"
+        margin: "auto"
       }}
-    ></Spinner>
+    />
+    <h2 className="py-3">Loading...</h2>
+  </div>
+  
   )
 }
 

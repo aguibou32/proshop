@@ -95,12 +95,10 @@ function ProductScreen() {
                   </ListGroup.Item>
                 </ListGroup>
               </Card>
-
             </Col>
           </Row>
         </>
       )}
-
     </>
   )
 }

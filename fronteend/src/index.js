@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/styles/bootstrap.custom.css';
 import './assets/styles/index.css';
 import App from './App';
@@ -20,7 +19,6 @@ import { Provider } from 'react-redux';
 import store from './store';
 import Register from './screens/RegisterScreen';
 
-
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
     <Route index={true} element={<HomeScreen />} />
@@ -39,8 +37,6 @@ root.render(
     </Provider>
   </React.StrictMode>
 );
-
-
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

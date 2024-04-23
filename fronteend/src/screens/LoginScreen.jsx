@@ -31,7 +31,7 @@ function LoginScreen() {
     if(userInfo){
       navigate(redirect);
     }
-  }, [userInfo, redirect, navigate])
+  }, [userInfo, redirect, navigate]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -46,7 +46,14 @@ function LoginScreen() {
     e.preventDefault();
     
     try {
-      const response = await login({email, password}).unwrap();
+
+      const user = {
+        email: email, 
+        password: password
+      };
+
+      const response = await login(user).unwrap();
+
       dispatch(setCredentials({...response}));
       navigate(redirect);
 

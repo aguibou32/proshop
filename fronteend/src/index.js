@@ -18,6 +18,10 @@ import LoginScreen from './screens/LoginScreen';
 import { Provider } from 'react-redux';
 import store from './store';
 import Register from './screens/RegisterScreen';
+import ShippingScreen from './components/ShippingScreen';
+import PrivateRoute from './components/PrivateRoute';
+import PaymentScreen from './screens/PaymentScreen';
+import PlaceOrderScreen from './screens/PlaceOrderScreen';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
@@ -26,6 +30,12 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/cart' element={<CartScreen />} />
     <Route path='/login' element={<LoginScreen />} />
     <Route path='/register' element={<Register />} />
+
+    <Route path='' element={<PrivateRoute />}>
+      <Route path='/shipping' element={<ShippingScreen />} />
+      <Route path='/payment' element={<PaymentScreen />} />
+      <Route path='/placeorder' element={<PlaceOrderScreen />} />
+    </Route>
   </Route>
 ));
 
@@ -41,4 +51,5 @@ root.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+
 reportWebVitals();

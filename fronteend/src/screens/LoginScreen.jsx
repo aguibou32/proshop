@@ -9,7 +9,6 @@ import { setCredentials } from '../slices/authSlice';
 import {toast} from 'react-toastify';
 
 function LoginScreen() {
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -19,13 +18,30 @@ function LoginScreen() {
   });
 
   const { email, password } = formData;
-
   const [login, {isLoading}] = useLoginMutation();
   const {userInfo} = useSelector(state => state.auth);
+  
+  const location = useLocation(); // A function that when called, it gives this object {pathname: '/login', search: '?redirect=/shipping', hash: '', state: null, key: 'a0nhoauz'};
+  const searchParams = location.search; // Gives me the value of search:'?redirect=/shipping' (if a parameter was passed to the url)
 
-  const {search} = useLocation();
-  const sp = new URLSearchParams(search);
-  const redirect = sp.get('redirect') || '/';
+  // const {search} = useLocation(); // Same as the 3 above lines, only here we are using destructuring 
+
+  const sp = new URLSearchParams(searchParams);
+
+  // The above line creates an object like the following 
+  // URLSearchParams {
+  //   'redirect' => '/shipping',
+  // }
+
+  // The reason we do this is because it makes it easy to deal with lot of parameters we can pass to the url like in the following
+  // http://example.com/page?param1=value1&param2=value2
+
+  // URLSearchParams {
+  //   'param1' => 'value1',
+  //   'param2' => 'value2',
+  // }
+  
+  const redirect = sp.get('redirect') || '/'; // we getting the value of the redirect from the URLSearchParams
 
   useEffect(() => {
     if(userInfo){
@@ -46,13 +62,15 @@ function LoginScreen() {
     e.preventDefault();
     
     try {
-
       const user = {
         email: email, 
         password: password
       };
 
       const response = await login(user).unwrap();
+      // const response = await login({email, password}).unwrap();
+
+      // console.log(response);
 
       dispatch(setCredentials({...response}));
       navigate(redirect);
@@ -61,7 +79,6 @@ function LoginScreen() {
       toast.error(error?.data.message || error?.error);
     }
   }
-
   return <FormContainer>
     <h1>Sign In</h1>
     <Form onSubmit={handleSubmit}>

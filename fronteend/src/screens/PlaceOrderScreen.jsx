@@ -13,6 +13,7 @@ function PlaceOrderScreen() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [createOrder, {isLoading, error}] = useCreateOrderMutation();
 
   const cart = useSelector(state => state.cart);
 
@@ -25,30 +26,25 @@ function PlaceOrderScreen() {
   }, [cart.paymentMethod, cart.shippingAddress.address, navigate]);
 
 
-  const [createOrder, {isLoading, error}] = useCreateOrderMutation();
 
   const placeOrderHandler = async () => {
     try {
       const res = await createOrder({
-        ordersItems: cart.cartItems,
+        orderItems: cart.cartItems,
         shippingAddress: cart.shippingAddress,
         paymentMethod: cart.paymentMethod,
         itemsPrice: cart.itemsPrice,
-        taxPrice: cart.taxtPrice,
-        totalPrice: cart.totalPrice
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice,
       }).unwrap();
-
-     if(res.data){
       dispatch(clearCartItems());
-      navigate(`/orders/${res._id}`);
-     }else{
-      toast.error('Unexpected response format');
-     }
-      
-    } catch (error) {
-      toast.error(error);
+      navigate(`/order/${res._id}`);
+    } catch (err) {
+      toast.error(err);
     }
-  }
+  };
+
 
   return (
     <>

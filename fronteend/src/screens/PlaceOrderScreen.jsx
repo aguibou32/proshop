@@ -7,13 +7,11 @@ import { toast } from 'react-toastify';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { useCreateOrderMutation } from "../slices/orderApiSlice";
-import cartSlice, { clearCartItems } from "../slices/cartSlice";
-
+import { clearCartItems } from "../slices/cartSlice";
 function PlaceOrderScreen() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [createOrder, {isLoading, error}] = useCreateOrderMutation();
 
   const cart = useSelector(state => state.cart);
 
@@ -26,6 +24,7 @@ function PlaceOrderScreen() {
   }, [cart.paymentMethod, cart.shippingAddress.address, navigate]);
 
 
+  const [createOrder, {isLoading, error}] = useCreateOrderMutation();
 
   const placeOrderHandler = async () => {
     try {
@@ -36,15 +35,21 @@ function PlaceOrderScreen() {
         itemsPrice: cart.itemsPrice,
         shippingPrice: cart.shippingPrice,
         taxPrice: cart.taxPrice,
-        totalPrice: cart.totalPrice,
+        totalPrice: cart.totalPrice
       }).unwrap();
-      dispatch(clearCartItems());
-      navigate(`/order/${res._id}`);
-    } catch (err) {
-      toast.error(err);
-    }
-  };
 
+      // console.log(res);
+
+     if(res){
+      dispatch(clearCartItems());
+      navigate(`/orders/${res._id}`);
+     }else{
+      toast.error('Unexpected response format');
+     }
+    } catch (error) {
+      toast.error(error?.data.message || error?.error);
+    }
+  }
 
   return (
     <>

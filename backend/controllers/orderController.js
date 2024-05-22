@@ -53,25 +53,19 @@ const addOrderItems = asyncHandler(async (req, res) => {
 // @route GET /api/orders/myorders
 // @access Private
 const getMyOrders = asyncHandler(async (req, res) => {
-  try {
     const orders = await Order.find({ user: req.user._id });
 
     if (!orders || orders.length === 0) {
       return res.status(404).json({ message: 'no orders found' });
     }
     res.status(200).json(orders);
-
-
-  } catch (error) {
-    console.log("Error fetching orders: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
+  
 });
 
 // @des GET order by ID
 // @route GET /api/orders/:id
 // @access Private
-const getOrderById = asyncHandler(async (req, res) => { 
+const getOrderById = asyncHandler(async (req, res) => {
   // res.json({body: req.params.id});
 
   try {
@@ -96,9 +90,10 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 
   const order = await Order.findById(req.params.id);
 
-  if(order === null){
+  if (order === null) {
     return res.status(404).json({ message: 'no order found' });
   }
+
   order.isPaid = true;
   order.paidAt = Date.now();
   order.paymentResult = {
@@ -116,19 +111,33 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 // @route PUT /api/orders/:id/update
 // @access Private/Admin
 const updateOrderToDelivered = asyncHandler(async (req, res) => {
-  res.send('update order to delivered');
+
+  const order = await Order.findById(req.params.id);
+
+  if(order){
+    order.isDelivered = true;
+    order.deliveredAt = Date.now();
+    const updatedOrder = await order.save();
+  
+    res.status(200).json(updatedOrder);
+  }else{
+    res.status(404);
+    throw new Error('Order not found');
+  }
+
 });
 
 // @des GET all orders
 // @route GET /api/orders
 // @access Private/Admin
 const getOrders = asyncHandler(async (req, res) => {
-  res.send('get all orders');
+  const orders = await Order.find({}).populate('user', 'name');
+  res.status(200).json(orders);
 });
 
 export {
   addOrderItems,
-  getMyOrders,
+  getMyOrders, 
   getOrderById,
   updateOrderToDelivered,
   updateOrderToPaid,

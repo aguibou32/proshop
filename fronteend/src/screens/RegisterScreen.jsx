@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useRegisterMutation } from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
-import { useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -21,7 +21,7 @@ function RegisterScreen() {
   const redirect = sp.get('redirect') || '/';
 
   useEffect(() => {
-    if(userInfo){
+    if (userInfo){
       navigate(redirect);
     }
   }, [userInfo, redirect, navigate])
@@ -31,17 +31,17 @@ function RegisterScreen() {
     name: '',
     email: '',
     password: '',
-    confirmPassword:''
+    confirmPassword: ''
   });
 
-  const {name, email, password, confirmPassword} = formData;
-  const [register, {isLoading}] = useRegisterMutation();
+  const { name, email, password, confirmPassword } = formData;
+  const [register, { isLoading }] = useRegisterMutation();
 
   const handleChange = (e) => {
-    const {id, value} = e.target;
+    const { id, value } = e.target;
 
     setFormData((prevData) => ({
-      ...prevData, 
+      ...prevData,
       [id]: value
     }));
   };
@@ -49,11 +49,11 @@ function RegisterScreen() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(password === confirmPassword){
+    if (password === confirmPassword) {
       try {
-        const response = await register({name, email, password}).unwrap();
+        const response = await register({ name, email, password }).unwrap();
 
-        dispatch(setCredentials({...response}));
+        dispatch(setCredentials({ ...response }));
         navigate('/');
       } catch (error) {
         toast.error(error?.data.message || error?.error);
@@ -85,11 +85,11 @@ function RegisterScreen() {
         <Form.Control type='password' placeholder='Confirm password' value={confirmPassword} onChange={handleChange}>
         </Form.Control>
       </Form.Group>
-    <Button className='mt-2' type='submit' variant='primary' disabled={isLoading}>{isLoading ? 'Processing...': 'Submit'}</Button>
+      <Button className='mt-2' type='submit' variant='primary' disabled={isLoading}>{isLoading ? 'Processing...' : 'Submit'}</Button>
 
       {isLoading && <Loader />}
       <Row className='py-3'>
-          <Col>Already have an account ? <Link to={redirect ? `/login?redirect=${redirect}`: '/login' }>Log in</Link></Col>
+        <Col>Already have an account ? <Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>Log in</Link></Col>
       </Row>
     </Form>
   </FormContainer>

@@ -25,12 +25,11 @@ const authUser = asyncHandler(async (req, res) => {
       email: user.email,
       isAdmin: user.isAdmin
     });
+
   }else{
     res.status(401);
     throw new Error('Invalid credentials');
   }
-
- 
 });
 
 // @desc Register user & get token
@@ -70,7 +69,9 @@ const registerUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-    })
+      isAdmin: user.isAdmin
+    });
+    
   } else {
     res.status(400);
     throw new Error('Invalid user data.');
@@ -150,7 +151,7 @@ const getUsers = asyncHandler(async (req, res) => {
 // @desc Get user by id
 // @route GET /api/users/:id
 // @access Private
-const getUserByID = asyncHandler(async (req, res) => {
+const getUserById = asyncHandler(async (req, res) => {
   res.send('get user by id');
 });
 
@@ -176,6 +177,6 @@ export {
   updateUserProfile,
   getUsers,
   deleteUser,
-  getUserByID,
+  getUserById,
   updateUser
 }

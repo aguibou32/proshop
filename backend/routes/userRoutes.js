@@ -25,8 +25,8 @@ router.route('/profile').get(protect, getUserProfile);
 router.route('/profile').put(protect, updateUserProfile);
 
 // admin routes
-router.route('/:id').get(admin, getUserById); 
-router.route('/:id').put(admin, updateUser); 
-router.route('/:id').delete(admin, deleteUser); 
+router.route('/:id').get(protect, admin, getUserById); 
+router.route('/:id').put(protect, admin, updateUser); 
+router.route('/:id').delete(protect, admin, deleteUser); 
 
 export default router;

@@ -1,7 +1,7 @@
 import { apiSlice } from "./apiSlice";
-import { PRODUCTS_URL } from "../constants";
+import { PRODUCTS_URL, UPLOADS_URL } from "../constants";
 
-// We are basically just injecting this slice called productsApiSlice to the parent slice called apiSlice using the jectEndpoints
+// We are basically just injecting this slice called productsApiSlice to the parent slice called apiSlice using the injectEndpoints
 
 export const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -9,6 +9,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: PRODUCTS_URL,
       }),
+      providesTags: ['Product'],
       keepUnusedDataFor: 5,
     }),
     getProductDetails: builder.query({
@@ -16,8 +17,46 @@ export const productsApiSlice = apiSlice.injectEndpoints({
         url: `${PRODUCTS_URL}/${productId}`
       }),
       keepUnusedDataFor: 5,
+      providesTags: ['Products']
+    }),
+    createProduct: builder.mutation({
+      query: () => ({
+        url: `${PRODUCTS_URL}`,
+        method: 'POST',
+        // body: data // In this case, we not passing any data because we are firstly creating the sample data and only after that we then go and edit it 
+        invalidatesTags: ['Product'], // What this will do is to prevent cashing so that we have fresh data all the time. 
+      })
+    }),
+
+    updateProduct: builder.mutation({
+      query: (product) => ({
+        url: `${PRODUCTS_URL}/${product.productId}`,
+        method: 'PUT',
+        body: product
+      }),
+      invalidatesTags: ['Products']
+    }),
+    deleteProduct: builder.mutation({
+      query: (product) => ({
+        url: `${PRODUCTS_URL}/${product._id}`,
+        method: 'DELETE',
+      }),
+    }),
+    uploadProductImage: builder.mutation({
+      query: (data) => ({
+        url: `${UPLOADS_URL}`, // This is not a productRoutes url
+        method: 'POST',
+        body: data
+      })
     })
   })
 });
 
-export const { useGetProductsQuery, useGetProductDetailsQuery } = productsApiSlice;
+export const {
+  useGetProductsQuery,
+  useGetProductDetailsQuery,
+  useCreateProductMutation,
+  useDeleteProductMutation,
+  useUpdateProductMutation,
+  useUploadProductImageMutation
+} = productsApiSlice;

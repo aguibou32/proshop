@@ -4,17 +4,19 @@ import { FaTimes, FaEdit, FaTrash } from "react-icons/fa";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import { useGetProductsQuery, useCreateProductMutation, useDeleteProductMutation } from "../../slices/productsApiSlice";
-
-
-import {toast} from 'react-toastify';
+import { useParams } from "react-router-dom";
+import Paginate from "../../components/Paginate";
+import { toast } from 'react-toastify';
 
 
 function ProductList() {
 
-  const { data: products, isLoading: isProductsLoading, error, refetch } = useGetProductsQuery();
-  const [createProduct, {isLoading: isCreateProductLoading}] = useCreateProductMutation();
+  const { pageNumber } = useParams();
 
-  const [deleteProduct, {isLoading: isProductDeleteLoading} ] = useDeleteProductMutation();
+  const { data, isLoading: isProductsLoading, error, refetch } = useGetProductsQuery({ pageNumber });
+  const [createProduct, { isLoading: isCreateProductLoading }] = useCreateProductMutation();
+
+  const [deleteProduct, { isLoading: isProductDeleteLoading }] = useDeleteProductMutation();
 
   const deleteProductHandler = async (product) => {
 
@@ -30,7 +32,7 @@ function ProductList() {
   }
 
   const createProductHandler = async () => {
-    if(window.confirm('Are you sure you want to add a new product ?')){
+    if (window.confirm('Are you sure you want to add a new product ?')) {
       try {
         await createProduct();
         refetch();
@@ -70,7 +72,7 @@ function ProductList() {
               </tr>
             </thead>
             <tbody>
-              {products.map(product => (
+              {data.products.map(product => (
                 <tr key={product._id}>
                   <td>{product._id}</td>
                   <td>{product.name}</td>
@@ -79,18 +81,23 @@ function ProductList() {
                   <td>{product.brand}</td>
                   <td>
                     <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                        <Button variant="light" className="btn-sm mx-2">
-                        <FaEdit/>
-                        </Button>
+                      <Button variant="light" className="btn-sm mx-2">
+                        <FaEdit />
+                      </Button>
                     </LinkContainer>
                     <Button variant="danger" className="btn-sm" onClick={() => deleteProductHandler(product)}>
-                      <FaTimes style={{color: 'white'}} />
+                      <FaTimes style={{ color: 'white' }} />
                     </Button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
+          <Paginate
+            pages={data.totalPages}
+            page={data.currentPage}
+            isAdmin={true}
+          />
         </>
       )
 

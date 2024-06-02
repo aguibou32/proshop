@@ -1,13 +1,30 @@
 import asyncHandler from '../middleware/asyncHandler.js'
 import Product from "../models/productModel.js";
 
+
 // @ desc Fetch all the products
 // @route GET /api/products
 // @access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({});
-  res.status(200).json(products);
+
+  const totalNumberOfProducts = await Product.countDocuments() // total number of products
+  const numberOfProductsPerPage = 3 // n products we want per page
+
+  const currentPage = Number(req.query.pageNumber) || 1 // getting the current page
+
+  const products = await Product.find({})
+    .limit(numberOfProductsPerPage)
+    .skip(numberOfProductsPerPage * (currentPage - 1)) // skip all record before the current page
+
+  const totalPages = Math.ceil(totalNumberOfProducts / numberOfProductsPerPage)
+
+  res.status(200).json({
+    products,
+    currentPage,
+    totalPages
+  })
 })
+
 
 // @des Fetch a single product
 // @route GET /api/products/:id

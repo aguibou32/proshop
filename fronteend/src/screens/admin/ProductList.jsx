@@ -11,9 +11,9 @@ import { toast } from 'react-toastify';
 
 function ProductList() {
 
-  const { pageNumber } = useParams();
+  const { currentPage } = useParams();
 
-  const { data, isLoading: isProductsLoading, error, refetch } = useGetProductsQuery({ pageNumber });
+  const { data, isLoading: isProductsLoading, error, refetch } = useGetProductsQuery({ currentPage });
   const [createProduct, { isLoading: isCreateProductLoading }] = useCreateProductMutation();
 
   const [deleteProduct, { isLoading: isProductDeleteLoading }] = useDeleteProductMutation();
@@ -94,8 +94,8 @@ function ProductList() {
             </tbody>
           </Table>
           <Paginate
-            pages={data.totalPages}
-            page={data.currentPage}
+            totalPages={data.totalPages}
+            currentPage={data.currentPage}
             isAdmin={true}
           />
         </>

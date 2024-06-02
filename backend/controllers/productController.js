@@ -7,10 +7,14 @@ import Product from "../models/productModel.js";
 // @access Public
 const getProducts = asyncHandler(async (req, res) => {
 
+  // const keyword = req.query.keyword ? { name: { $regex: req.query.keyword, $options: 'i' } } : {}
+
+
+
   const totalNumberOfProducts = await Product.countDocuments() // total number of products
   const numberOfProductsPerPage = 3 // n products we want per page
 
-  const currentPage = Number(req.query.pageNumber) || 1 // getting the current page
+  const currentPage = Number(req.query.currentPage) || 1 // getting the current page
 
   const products = await Product.find({})
     .limit(numberOfProductsPerPage)
@@ -32,9 +36,9 @@ const getProducts = asyncHandler(async (req, res) => {
 const getProductById = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
-  if(product){
+  if (product) {
     return res.json(product);
-  }else{
+  } else {
     res.status(404);
     throw new Error('Resource not found.');
   }
@@ -44,7 +48,7 @@ const getProductById = asyncHandler(async (req, res) => {
 //  @ desc Create a product
 //  @ route POST /api/products
 //  @ access PRIVATE ADMIN
-const createProduct = asyncHandler( async (req, res) => {
+const createProduct = asyncHandler(async (req, res) => {
 
   const product = new Product({
     name: 'Sample name',
@@ -56,7 +60,7 @@ const createProduct = asyncHandler( async (req, res) => {
     countInStock: 0,
     numReviews: 0,
     description: 'Sample description'
-  }) ;
+  });
 
   const createdProduct = await product.save();
   res.status(201).json(createdProduct);
@@ -64,35 +68,35 @@ const createProduct = asyncHandler( async (req, res) => {
 });
 
 
-  // @desc Update a product
-  // @route PUT /api/products/:id
-  // @access Private/Admin
-  const updateProduct = asyncHandler(async (req, res) => {
+// @desc Update a product
+// @route PUT /api/products/:id
+// @access Private/Admin
+const updateProduct = asyncHandler(async (req, res) => {
 
-    const product = await Product.findById(req.params.id);
-    // res.send({product: product});
-    // res.send({body: req.body})
-    if(product){
+  const product = await Product.findById(req.params.id);
+  // res.send({product: product});
+  // res.send({body: req.body})
+  if (product) {
 
-      const {name, price, description, image, brand, category, countInStock } = req.body;
+    const { name, price, description, image, brand, category, countInStock } = req.body;
 
-      product.name = name;
-      product.price = price;
-      product.description = description;
-      product.image = image;
-      product.brand = brand;
-      product.category = category;
-      product.countInStock = countInStock;
+    product.name = name;
+    product.price = price;
+    product.description = description;
+    product.image = image;
+    product.brand = brand;
+    product.category = category;
+    product.countInStock = countInStock;
 
-      const updatedProduct = await product.save();
+    const updatedProduct = await product.save();
 
-      res.json(updatedProduct);
-    }else{
-      res.status(404);
-      throw new Error('Ressource not found');
-    }
-  })
-  
+    res.json(updatedProduct);
+  } else {
+    res.status(404);
+    throw new Error('Ressource not found');
+  }
+})
+
 
 // @desc POST a product review
 // @route POST /api/products/:id/reviews
@@ -111,7 +115,7 @@ const createProductReview = asyncHandler(async (req, res) => {
     // If a match is found, it means the user has already reviewed this specific product
     // To simplify the explanation. If there is one review with the logged in user id,
     // It means the logged in user already reviewed this product 
-    
+
     const alreadyReviewed = product.reviews.find(
       (review) => review.user.toString() === req.user._id.toString()
     );
@@ -166,5 +170,5 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
 
 
- 
-export {getProducts, getProductById, createProduct, deleteProduct, updateProduct, createProductReview };
+
+export { getProducts, getProductById, createProduct, deleteProduct, updateProduct, createProductReview };

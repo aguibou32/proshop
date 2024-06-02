@@ -85,7 +85,7 @@ function ProductEditScreen() {
     e.preventDefault();
 
     const updatedProduct = {
-      productId,
+      _id: productId,
       name,
       price,
       image,
@@ -115,6 +115,7 @@ function ProductEditScreen() {
     <FormContainer>
       <h1>Edit Product</h1>
       {isUpdateProductLoading && <Loader />}
+      {isUploadLoading && <Loader />}
 
       {
         isProductLoading ? <Loader /> : error ? <Message variant='danger'>{error.message}</Message> : (

@@ -77,19 +77,77 @@ const createProduct = asyncHandler( async (req, res) => {
   })
   
 
-  // @desc DELETE a product
-  // @route DELETE /api/products/:id
-  // @access Private/Admin
-const deleteProduct = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+// @desc POST a product review
+// @route POST /api/products/:id/reviews
+// @access Private
+const createProductReview = asyncHandler(async (req, res) => {
 
-  if(product){
-    await Product.deleteOne({_id: product._id});
-    res.status(200).json({message: 'Product Deleted'})
-  }else{
-    res.status(404);
-    throw new Error('Product not found');
+  const { rating, comment } = req.body; // Destructuring the rating and comment from the request body
+  const product = await Product.findById(req.params.id); // Finding the product by ID passed in the URL
+
+  if (product) {
+
+    // Checking to see if the user has already reviewed this specific product
+    // To do that:
+    // Loop through all the reviews of the product
+    // Compare each review's user ID with the ID of the currently authenticated user
+    // If a match is found, it means the user has already reviewed this specific product
+    // To simplify the explanation. If there is one review with the logged in user id,
+    // It means the logged in user already reviewed this product 
+    
+    const alreadyReviewed = product.reviews.find(
+      (review) => review.user.toString() === req.user._id.toString()
+    );
+
+    if (alreadyReviewed) {
+      res.status(400)
+      throw new Error('Product already reviewed')
+    }
+
+    // Create a new review object
+    const review = {
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+      user: req.user._id // req.user._id is the id of the logged in user
+    }
+
+    // Add the new review to the product's reviews array
+    product.reviews.push(review)
+    // product.reviews = [...product.reviews, review] // same as above
+
+    // Update the number of reviews and the product's rating
+    product.numReviews = product.reviews.length
+    product.rating =
+      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+      product.reviews.length
+
+    // Save the updated product
+    await product.save()
+
+    res.status(201).json({ message: 'Review added' })
+  } else {
+    res.status(404)
+    throw new Error('Product not found')
   }
 })
 
-export {getProducts, getProductById, createProduct, deleteProduct, updateProduct };
+// @desc    Delete a product
+// @route   DELETE /api/products/:id
+// @access  Private/Admin
+const deleteProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id)
+
+  if (product) {
+    await Product.deleteOne({ _id: product._id })
+    res.json({ message: 'Product removed' })
+  } else {
+    res.status(404)
+    throw new Error('Product not found')
+  }
+})
+
+
+
+ 
+export {getProducts, getProductById, createProduct, deleteProduct, updateProduct, createProductReview };

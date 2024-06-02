@@ -14,18 +14,17 @@ function UserEditScreen() {
 
   const { data: user, isLoading: isUserLoading, error: errorLoadingUser, refetch } = useGetUserQuery(userId)
 
-  console.log(user)
-
-  const [updateUser, {isLoading: isUpdateUserLoading}] = useUpdateUserMutation();
+  const [updateUser, { isLoading: isUpdateUserLoading }] = useUpdateUserMutation();
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    isAdmin: false,
     password: '',
     confirmPassword: ''
   })
 
-  const { name, email, password, confirmPassword } = formData
+  const { name, email, isAdmin, password, confirmPassword } = formData
 
   useEffect(() => {
     if (user) {
@@ -33,6 +32,7 @@ function UserEditScreen() {
         ...prevData,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin || false,
         password: '',
         confirmPassword: ''
       }))
@@ -44,13 +44,14 @@ function UserEditScreen() {
 
     if (password !== confirmPassword) {
       toast.error('passwords do not match')
-    }else{
+    } else {
       try {
 
         const updatedUser = {
           _id: user._id,
           name,
           email,
+          isAdmin,
           password
         }
 
@@ -59,18 +60,19 @@ function UserEditScreen() {
         navigate('/admin/users')
 
         toast.success('User updated')
-      } catch (error) {
-        toast.error(error?.data.message || error?.error)
+      } catch (err) {
+        console.log(err)
+        toast.error(err?.data.message || err?.error)
       }
     }
   }
 
   const handleChange = (e) => {
-    const { id, value } = e.target
+    const { id, value, type, checked } = e.target
 
     setFormData(prevData => ({
       ...prevData,
-      [id]: value
+      [id]: type === 'checkbox' ? checked : value
     }))
   }
 
@@ -80,51 +82,62 @@ function UserEditScreen() {
         <h4>Edit User: {user._id}</h4>
 
         <Row>
-          <Form onSubmit={handleSubmit}>
-            <FormGroup controlId='name' className='my-2'>
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type='text'
-                placeholder='Enter name'
-                value={name}
-                onChange={handleChange}>
-              </Form.Control>
-            </FormGroup>
+          <FormContainer>
+            <Form onSubmit={handleSubmit}>
+              <FormGroup controlId='name' className='my-2'>
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type='text'
+                  placeholder='Enter name'
+                  value={name}
+                  onChange={handleChange}>
+                </Form.Control>
+              </FormGroup>
 
-            <FormGroup controlId='email' className='my-2'>
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type='email'
-                placeholder='Enter email'
-                value={email}
-                onChange={handleChange}>
-              </Form.Control>
-            </FormGroup>
+              <FormGroup controlId='email' className='my-2'>
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type='email'
+                  placeholder='Enter email'
+                  value={email}
+                  onChange={handleChange}>
+                </Form.Control>
+              </FormGroup>
 
-            <FormGroup controlId='password' className='my-2'>
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type='password'
-                placeholder='Enter password'
-                value={password}
-                onChange={handleChange}>
-              </Form.Control>
-            </FormGroup>
+              <Form.Group controlId='isAdmin' className='my-2'>
+                <Form.Check
+                  type='checkbox'
+                  label='Is Admin'
+                  checked={isAdmin}
+                  onChange={handleChange}
+                />
+              </Form.Group>
 
-            <FormGroup controlId='confirmPassword' className='my-2'>
-              <Form.Label>Confirm Password</Form.Label>
-              <Form.Control
-                type='password'
-                placeholder='Confirm password'
-                value={confirmPassword}
-                onChange={handleChange}>
-              </Form.Control>
-            </FormGroup>
+              <FormGroup controlId='password' className='my-2'>
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type='password'
+                  placeholder='Enter password'
+                  value={password}
+                  onChange={handleChange}>
+                </Form.Control>
+              </FormGroup>
 
-            <Button className='mt-2' type='submit' variant='primary' disabled={isUpdateUserLoading}>{isUpdateUserLoading ? 'Processing...': 'Submit'}</Button>
+              <FormGroup controlId='confirmPassword' className='my-2'>
+                <Form.Label>Confirm Password</Form.Label>
+                <Form.Control
+                  type='password'
+                  placeholder='Confirm password'
+                  value={confirmPassword}
+                  onChange={handleChange}>
+                </Form.Control>
+              </FormGroup>
 
-            {isUpdateUserLoading && <Loader />}
-          </Form>
+              <Button className='mt-2' type='submit' variant='primary' disabled={isUpdateUserLoading}>{isUpdateUserLoading ? 'Processing...' : 'Submit'}</Button>
+
+              {isUpdateUserLoading && <Loader />}
+            </Form>
+          </FormContainer>
         </Row>
       </>
     )

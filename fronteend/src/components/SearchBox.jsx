@@ -14,6 +14,7 @@ const SearchBox = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (keyword.trim()) {
+      setKeyword('')
       navigate(`/search/${keyword}`)
     }
     else {
@@ -33,7 +34,7 @@ const SearchBox = () => {
       </Form.Control>
       <Button
         type="submit"
-        variant="light"
+        variant="outline-light"
         className="p-2 mx-2 custom-transparent-button"
       >
         Search

@@ -2,24 +2,27 @@ import { Row, Col } from 'react-bootstrap';
 import Product from '../components/Product';
 import Loader from '../components/Loader';
 
-import { useGetProductsQuery } from '../slices/productsApiSlice';
-import Message from '../components/Message';
-import { useParams } from 'react-router-dom';
+import { useGetProductsQuery } from '../slices/productsApiSlice'
+import Message from '../components/Message'
+import ProductCarousel from '../components/ProductCarousel'
+import { useParams } from 'react-router-dom'
 import Paginate from '../components/Paginate'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
 function HomeScreen() {
 
   const { keyword, currentPage } = useParams()
 
   const { data, isLoading, error } = useGetProductsQuery({ keyword, currentPage })
-
   // If loading show the loading component, if no, is there any error, if so show the eror if not show the actual Component 
+
   return (
     <>
-    {
-      keyword ? <Link to='/' className='btn btn-light mb-4'>Go Back</Link> : ''
-    }
+    
+      {
+        !keyword ? <ProductCarousel /> : <Link to='/' className='btn btn-light mb-4'>Go Back</Link>
+      }
+
       {isLoading ? (
         <Loader />
       ) : error ? (
@@ -42,7 +45,8 @@ function HomeScreen() {
         </>
       )}
     </>
-  );
+  )
+
 }
 
 export default HomeScreen;

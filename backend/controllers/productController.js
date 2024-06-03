@@ -7,16 +7,14 @@ import Product from "../models/productModel.js";
 // @access Public
 const getProducts = asyncHandler(async (req, res) => {
 
-  // const keyword = req.query.keyword ? { name: { $regex: req.query.keyword, $options: 'i' } } : {}
+  const keyword = req.query.keyword ? { name: { $regex: req.query.keyword, $options: 'i' } } : {}
 
-
-
-  const totalNumberOfProducts = await Product.countDocuments() // total number of products
-  const numberOfProductsPerPage = 3 // n products we want per page
+  const totalNumberOfProducts = await Product.countDocuments({ ...keyword }) // total number of products
+  const numberOfProductsPerPage = 6 // n products we want per page
 
   const currentPage = Number(req.query.currentPage) || 1 // getting the current page
 
-  const products = await Product.find({})
+  const products = await Product.find({ ...keyword })
     .limit(numberOfProductsPerPage)
     .skip(numberOfProductsPerPage * (currentPage - 1)) // skip all record before the current page
 

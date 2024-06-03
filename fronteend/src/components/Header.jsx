@@ -8,7 +8,7 @@ import { useLogoutMutation } from '../slices/usersApiSlice.js';
 import { logout } from '../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import SearchBox from './SearchBox.jsx';
 
 export default function Header() {
 
@@ -44,6 +44,7 @@ export default function Header() {
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>
+              <SearchBox />
               <LinkContainer to='/cart'>
                 <Nav.Link><FaShoppingCart />Cart
                   {cartItems.length > 0 && (

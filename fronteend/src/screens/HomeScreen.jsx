@@ -9,8 +9,10 @@ import Paginate from '../components/Paginate'
 
 
 function HomeScreen() {
-  const {pageNumber} = useParams()               
-  const { data, isLoading, error } = useGetProductsQuery({pageNumber})
+
+  const {keyword, currentPage} = useParams()    
+  
+  const { data, isLoading, error } = useGetProductsQuery({keyword, currentPage})
 
   // If loading show the loading component, if no, is there any error, if so show the eror if not show the actual Component 
   return (
@@ -30,8 +32,9 @@ function HomeScreen() {
             ))}
           </Row>
           <Paginate
-            pages = {data.totalPages}
-            page = {data.currentPage}
+            totalPages = {data.totalPages}
+            currentPage = {data.currentPage}
+            keyword = {keyword ? keyword: ''}
           />
         </>
       )}

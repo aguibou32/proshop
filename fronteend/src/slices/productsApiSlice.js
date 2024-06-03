@@ -6,10 +6,11 @@ import { PRODUCTS_URL, UPLOADS_URL } from "../constants";
 export const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: ({currentPage}) => ({
+      query: ({keyword, currentPage}) => ({
         url: PRODUCTS_URL,
         params: {
-          currentPage
+          currentPage,
+          keyword
         },
         method: 'GET'
       }),

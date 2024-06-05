@@ -10,7 +10,7 @@ const getProducts = asyncHandler(async (req, res) => {
   const keyword = req.query.keyword ? { name: { $regex: req.query.keyword, $options: 'i' } } : {}
 
   const totalNumberOfProducts = await Product.countDocuments({ ...keyword }) // total number of products
-  const numberOfProductsPerPage = 6 // n products we want per page
+  const numberOfProductsPerPage = process.env.PAGINATION_LIMIT // n products we want per page
 
   const currentPage = Number(req.query.currentPage) || 1 // getting the current page
 

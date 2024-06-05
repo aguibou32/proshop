@@ -9,6 +9,7 @@ import { logout } from '../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import SearchBox from './SearchBox.jsx';
+import { resetCart } from '../slices/cartSlice.js';
 
 export default function Header() {
 
@@ -22,9 +23,10 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      await logoutApiCall().unwrap();
-      dispatch(logout());
-      navigate('/login');
+      await logoutApiCall().unwrap()
+      dispatch(logout())
+      dispatch(resetCart())
+      navigate('/login')
 
     } catch (error) {
       toast.error(error?.data.message || error?.error);

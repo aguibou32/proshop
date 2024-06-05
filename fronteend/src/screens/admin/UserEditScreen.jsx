@@ -76,7 +76,7 @@ function UserEditScreen() {
     }))
   }
 
-  return isUserLoading ? <Loader /> : errorLoadingUser ? <Message variant='danger'>{errorLoadingUser?.data?.message || errorLoadingUser.message}</Message> :
+  return isUserLoading ? <Loader /> : errorLoadingUser ? <Message variant='danger'>{errorLoadingUser?.data?.message || errorLoadingUser.error}</Message> :
     (
       <>
         <h4>Edit User: {user._id}</h4>

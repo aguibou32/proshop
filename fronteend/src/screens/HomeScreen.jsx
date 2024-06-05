@@ -8,6 +8,7 @@ import ProductCarousel from '../components/ProductCarousel'
 import { useParams } from 'react-router-dom'
 import Paginate from '../components/Paginate'
 import { Link } from 'react-router-dom'
+import Meta from '../components/Meta';
 
 function HomeScreen() {
 
@@ -29,6 +30,7 @@ function HomeScreen() {
         <Message variant="danger">{error?.data?.message || error.error}</Message>
       ) : (
         <>
+        <Meta title='Welcome' />
           <h1>Latest products</h1>
           <Row>
             {data.products.map((product) => (

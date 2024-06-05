@@ -13,7 +13,7 @@ const ProductCarousel = () => {
     <Carousel className="bg-primary mb-4" pause='hover'>
        {products.map(product => (
         <Carousel.Item key={product._id}>
-          <Link to={`/product/${product._id}`}>
+          <Link to={`/products/${product._id}`}>
             <Image src={product.image} alt={product.name} fluid />
             <Carousel.Caption className="carousel-caption">
               <h2>{product.name} (${product.price})</h2>

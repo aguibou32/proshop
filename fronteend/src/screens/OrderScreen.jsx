@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap';
+import { Row, Col, ListGroup, Image, Button, Card } from 'react-bootstrap';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { useGetOrderDetailsQuery, usePayOrderMutation, useGetPayPalClientIdQuery, useDeliverOrderMutation } from '../slices/orderApiSlice';
@@ -77,11 +77,11 @@ function OrderScreen() {
   function onApprove(data, actions) {
     return actions.order.capture().then(async function (details) {
       try {          
-        await payOrder({ orderId, details});
+        await payOrder({ orderId, details}).unwrap();
         refetch();
         toast.success('Payment successful');
       } catch (err) {
-        toast.error(err?.data?.message || err.message);
+        toast.error(err?.data?.message || err.error);
       }
     });
   };
@@ -97,7 +97,7 @@ function OrderScreen() {
    };
 
 
-  return isOrderLoading ? <Loader /> : errorLoadingOrder ? <Message variant='danger'>{errorLoadingOrder?.data?.message || errorLoadingOrder.message}</Message> :
+  return isOrderLoading ? <Loader /> : errorLoadingOrder ? <Message variant='danger'>{errorLoadingOrder?.data?.message || errorLoadingOrder.error}</Message> :
     (
       <>
         <h1>Order: {order._id}</h1>

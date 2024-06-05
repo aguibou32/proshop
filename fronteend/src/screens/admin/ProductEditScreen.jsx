@@ -118,7 +118,7 @@ function ProductEditScreen() {
       {isUploadLoading && <Loader />}
 
       {
-        isProductLoading ? <Loader /> : error ? <Message variant='danger'>{error.message}</Message> : (
+        isProductLoading ? <Loader /> : error ? <Message variant='danger'>{error?.error}</Message> : (
           <Form onSubmit={handleSubmit}>
 
             <Form.Group controlId='name' className='my-3'>

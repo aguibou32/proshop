@@ -123,7 +123,7 @@ function ProfileScreen() {
       <Col md={9}>
         <h2>My orders</h2>
         {
-          isMyOrdersLoading ? <Loader /> : error ? <Message variant='danger'> {error?.data.message || error?.error}</Message> : (
+          isMyOrdersLoading ? <Loader /> : error ? <Message variant='danger'> {error?.data?.message || error?.error}</Message> : (
             <Table striped bordered hover responsive className='table-sm'>
               <thead>
                 <tr>

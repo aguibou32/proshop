@@ -58,7 +58,7 @@ function ProductList() {
     {isCreateProductLoading && <Loader />}
     {isProductDeleteLoading && <Loader />}
 
-    {isProductsLoading ? <Loader /> : error ? <Message variant='danger'>{error?.message || error?.error}</Message> :
+    {isProductsLoading ? <Loader /> : error ? <Message variant='danger'>{error?.data?.message || error?.error}</Message> :
       (
         <>
           <Table striped hover responsive className="table-sm">

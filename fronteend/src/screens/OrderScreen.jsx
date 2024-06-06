@@ -77,11 +77,11 @@ function OrderScreen() {
   function onApprove(data, actions) {
     return actions.order.capture().then(async function (details) {
       try {          
-        await payOrder({ orderId, details}).unwrap();
-        refetch();
-        toast.success('Payment successful');
+        await payOrder({ orderId, details}).unwrap()
+        refetch()
+        toast.success('Payment successful')
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        toast.error(err?.data?.message || err.error)
       }
     });
   };
@@ -93,8 +93,8 @@ function OrderScreen() {
   // };
 
   function onError(err) {
-    toast.error(err?.data?.message || err.message);
-   };
+    toast.error(err?.data?.message || err.message)
+   }
 
 
   return isOrderLoading ? <Loader /> : errorLoadingOrder ? <Message variant='danger'>{errorLoadingOrder?.data?.message || errorLoadingOrder.error}</Message> :
